@@ -1,1478 +1,624 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KKG HACK SLOP & WINGO HACK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Monitoring System</title>
     <style>
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Courier New', monospace;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        body {
-            background-color: #0a0a0a;
-            color: #0f0;
-            min-height: 100vh;
-            overflow-x: hidden;
-            background-image: 
-                linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
-            background-size: 25px 25px;
-            touch-action: manipulation;
-        }
-        
-        .container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            width: 100%;
+            font-family: 'Arial', sans-serif;
             overflow: hidden;
-        }
-        
-        .terminal-header {
-            padding: 12px 15px;
-            background: rgba(0, 20, 0, 0.95);
-            border-bottom: 1px solid #0f0;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-        
-        .terminal-header::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.1), transparent);
-            animation: scanline 8s linear infinite;
-        }
-        
-        @keyframes scanline {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
-        .terminal-header h1 {
-            font-size: 1.3rem;
-            margin-bottom: 4px;
-            text-shadow: 0 0 8px #0f0;
-            letter-spacing: 1px;
-            position: relative;
-            line-height: 1.2;
-        }
-        
-        .terminal-header p {
-            font-size: 0.8rem;
-            opacity: 0.8;
-            line-height: 1.3;
-        }
-        
-        .blink {
-            animation: blink 1s infinite;
-        }
-        
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-        
-        .content-wrapper {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-            padding: 10px;
-            gap: 10px;
-        }
-        
-        .mobile-tabs {
-            display: flex;
-            background: rgba(0, 15, 0, 0.9);
-            border-radius: 8px;
-            padding: 5px;
-            margin-bottom: 5px;
-            border: 1px solid rgba(0, 255, 0, 0.3);
-            overflow: hidden;
-        }
-        
-        .mobile-tab {
-            flex: 1;
-            text-align: center;
-            padding: 10px 5px;
-            background: transparent;
-            border: none;
-            color: #0f0;
-            font-size: 0.85rem;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .mobile-tab.active {
-            background: rgba(0, 255, 0, 0.15);
-            box-shadow: inset 0 0 8px rgba(0, 255, 0, 0.2);
-            text-shadow: 0 0 5px #0f0;
+            background: #0a0e17;
         }
         
         .webview-container {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #0f0;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
-            border-radius: 5px;
-            min-height: 300px;
-        }
-        
-        #webview {
             width: 100%;
-            height: 100%;
-            border: none;
-            background: white;
-        }
-        
-        #prediction-container {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: radial-gradient(circle at top, #3b0000 0%, #0b0000 100%);
-            overflow: auto;
-            display: none;
-        }
-        
-        .mobile-data-stream {
-            background: rgba(0, 10, 0, 0.85);
-            border: 1px solid rgba(0, 255, 0, 0.3);
-            border-radius: 5px;
-            padding: 10px;
-            font-size: 0.7rem;
-            overflow: hidden;
-            margin-top: 10px;
-            display: none;
-            max-height: 120px;
-        }
-        
-        .mobile-data-stream.active {
-            display: block;
-        }
-        
-        .mobile-data-stream::before {
-            content: "SYSTEM DATA FEED:";
-            display: block;
-            margin-bottom: 5px;
-            color: #0f0;
-            font-weight: bold;
-            font-size: 0.8rem;
-            border-bottom: 1px solid rgba(0, 255, 0, 0.3);
-            padding-bottom: 3px;
-        }
-        
-        .stream-content {
-            height: 80px;
-            overflow: hidden;
+            height: 100vh;
             position: relative;
         }
         
-        .stream-line {
-            animation: stream 15s linear infinite;
-            line-height: 1.3;
-            color: #0f0;
-            white-space: nowrap;
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
         
-        @keyframes stream {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-100%); }
-        }
-        
-        /* Floating Controls Button */
-        .floating-controls-btn {
+        /* Small Control Panel */
+        .control-panel {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1001;
-            background: rgba(0, 30, 0, 0.95);
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), inset 0 0 10px rgba(0, 255, 0, 0.2);
-            border: 2px solid #0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #0f0;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-shadow: 0 0 10px #0f0;
-            user-select: none;
-        }
-        
-        /* Floating Controls Panel with WIN PROBABILITY */
-        .floating-controls-panel {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1002;
-            background: rgba(0, 15, 0, 0.98);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 0 40px rgba(0, 255, 0, 0.6), inset 0 0 20px rgba(0, 255, 0, 0.15);
-            border: 2px solid #0f0;
-            width: 90%;
-            max-width: 400px;
-            max-height: 90vh;
-            overflow-y: auto;
-            display: none;
-        }
-        
-        .floating-controls-panel.active {
-            display: block;
-        }
-        
-        .floating-controls-panel h3 {
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            color: #0f0;
-            text-align: center;
-            border-bottom: 1px solid rgba(0, 255, 0, 0.3);
-            padding-bottom: 8px;
-            text-shadow: 0 0 8px #0f0;
-        }
-        
-        /* WIN PROBABILITY Indicator inside Floating Panel */
-        .floating-indicator {
-            background: rgba(0, 15, 0, 0.95);
+            top: 15px;
+            right: 15px;
+            background: rgba(16, 20, 34, 0.9);
+            color: #00ff88;
+            padding: 8px 16px;
             border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4), inset 0 0 10px rgba(0, 255, 0, 0.1);
-            border: 1px solid #0f0;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.15);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            transition: all 0.3s;
+            user-select: none;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            min-width: 120px;
+            text-align: center;
         }
         
-        .indicator-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+        .control-panel:hover {
+            background: rgba(26, 31, 56, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.25);
+        }
+        
+        /* Small Floating Box */
+        .floating-box {
+            position: fixed;
+            top: 60px;
+            right: 15px;
+            width: 220px;
+            background: rgba(16, 20, 34, 0.95);
+            border-radius: 12px;
+            padding: 0;
+            z-index: 999;
+            display: none;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            overflow: hidden;
+        }
+        
+        .floating-box.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .floating-box.minimized {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .box-header {
+            background: linear-gradient(135deg, #1a1f38, #0f1427);
+            padding: 12px 15px;
             position: relative;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
         }
         
-        .indicator-header::after {
-            content: "";
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 80px;
-            height: 2px;
-            background: #0f0;
-            box-shadow: 0 0 5px #0f0;
-        }
-        
-        .indicator-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #0f0;
-            text-shadow: 0 0 5px #0f0;
+        .box-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 3px;
             letter-spacing: 0.5px;
         }
         
-        .indicator-status {
-            font-size: 0.8rem;
-            padding: 4px 10px;
-            background: rgba(0, 255, 0, 0.1);
-            border-radius: 3px;
-            border: 1px solid #0f0;
-            color: #0f0;
-            text-shadow: 0 0 5px #0f0;
+        .box-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            font-size: 10px;
         }
         
-        .percentage-display {
+        /* Minimize Button */
+        .minimize-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            line-height: 1;
+            padding: 0;
+        }
+        
+        .minimize-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .percentage-container {
+            padding: 15px;
             text-align: center;
-            margin: 20px 0;
-            position: relative;
         }
         
         .percentage-value {
-            font-size: 3rem;
-            font-weight: 800;
-            color: #0f0;
-            text-shadow: 0 0 12px #0f0;
-            transition: all 0.8s ease;
+            font-size: 32px;
+            font-weight: bold;
+            color: #00ff88;
+            margin-bottom: 10px;
+            transition: all 1s ease;
             font-family: 'Courier New', monospace;
-            letter-spacing: 1px;
-            position: relative;
         }
         
-        .percentage-value::after {
-            content: "%";
-            font-size: 1.5rem;
-            position: absolute;
-            top: 8px;
-            right: -20px;
-            color: #0f0;
-            opacity: 0.7;
+        .percentage-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .percentage-label {
-            font-size: 0.9rem;
-            opacity: 0.7;
-            margin-top: 5px;
-            letter-spacing: 0.5px;
+        .percentage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00cc6a, #00ff88);
+            border-radius: 6px;
+            width: 65%;
+            transition: width 2s ease;
         }
         
-        .progress-container {
-            margin: 20px 0;
-        }
-        
-        .progress-label {
+        .percentage-markers {
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
-            margin-bottom: 8px;
-            opacity: 0.8;
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 10px;
         }
         
-        .progress-bar {
-            height: 12px;
-            background: rgba(0, 20, 0, 0.8);
-            border-radius: 2px;
-            overflow: hidden;
-            border: 1px solid rgba(0, 255, 0, 0.3);
-            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+        .percentage-status {
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 6px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
         }
         
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #002200, #0f0, #002200);
-            width: 50%;
-            border-radius: 2px;
-            transition: width 1.8s ease-in-out;
-            position: relative;
-            overflow: hidden;
+        .status-label {
+            display: block;
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2px;
         }
         
-        .progress-fill::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            animation: shimmer 2s infinite;
+        #statusText {
+            font-size: 11px;
+            font-weight: bold;
+            color: #00ff88;
+            display: block;
         }
         
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
-        .chance-description {
-            font-size: 0.85rem;
-            text-align: center;
-            margin-top: 15px;
-            padding: 10px;
-            background: rgba(0, 20, 0, 0.3);
-            border-radius: 3px;
-            border: 1px solid rgba(0, 255, 0, 0.2);
-            line-height: 1.4;
-            min-height: 50px;
+        .online-status {
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 6px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 204, 106, 0.05));
+            border-radius: 6px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
         }
         
-        .floating-controls {
-            background: rgba(0, 20, 0, 0.3);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-            border: 1px solid rgba(0, 255, 0, 0.2);
-        }
-        
-        .control-toggle {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding: 8px 0;
-            border-bottom: 1px dashed rgba(0, 255, 0, 0.2);
-        }
-        
-        .control-toggle span {
-            font-size: 0.9rem;
-        }
-        
-        .toggle-switch {
-            position: relative;
-            width: 50px;
-            height: 26px;
-        }
-        
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #002200;
-            transition: .4s;
-            border-radius: 26px;
-            border: 1px solid #0f0;
-        }
-        
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 4px;
-            bottom: 3px;
-            background-color: #0f0;
-            transition: .4s;
+        .online-dot {
+            width: 6px;
+            height: 6px;
+            background: #00ff88;
             border-radius: 50%;
+            animation: pulse 2s infinite;
         }
         
-        input:checked + .toggle-slider {
-            background-color: #004400;
-        }
-        
-        input:checked + .toggle-slider:before {
-            transform: translateX(22px);
-        }
-        
-        .floating-controls-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .floating-btn {
-            padding: 10px 15px;
-            background: rgba(0, 30, 0, 0.9);
-            border: 1px solid #0f0;
-            border-radius: 5px;
-            color: #0f0;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            flex: 1;
-            font-family: 'Courier New', monospace;
+        .online-text {
+            font-size: 10px;
+            font-weight: bold;
+            color: #00ff88;
             letter-spacing: 0.5px;
-            text-shadow: 0 0 5px #0f0;
-            font-size: 0.85rem;
         }
         
-        .floating-btn:hover, .floating-btn:active {
-            background: rgba(0, 40, 0, 0.9);
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
-        }
-        
-        .password-prompt {
-            display: none;
+        .password-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 2000;
+            background: rgba(10, 14, 23, 0.95);
+            display: flex;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
-            padding: 20px;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
         }
         
-        .password-prompt.active {
-            display: flex;
+        .password-modal.show {
+            opacity: 1;
+            visibility: visible;
         }
         
         .password-box {
-            background: rgba(0, 20, 0, 0.98);
-            border-radius: 10px;
+            background: rgba(16, 20, 34, 0.95);
             padding: 25px;
-            width: 90%;
-            max-width: 400px;
-            border: 2px solid #0f0;
-            box-shadow: 0 0 40px rgba(0, 255, 0, 0.6);
+            border-radius: 12px;
+            width: 85%;
+            max-width: 300px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            transform: translateY(-20px);
+            transition: transform 0.3s;
+        }
+        
+        .password-modal.show .password-box {
+            transform: translateY(0);
+        }
+        
+        .password-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
         }
         
         .password-title {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            color: #0f0;
-            text-align: center;
-            text-shadow: 0 0 10px #0f0;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+        
+        .password-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            font-size: 12px;
+            line-height: 1.4;
         }
         
         .password-input {
             width: 100%;
-            padding: 12px 15px;
-            background: rgba(0, 10, 0, 0.8);
-            border: 1px solid #0f0;
-            border-radius: 5px;
-            color: #0f0;
-            font-size: 1.1rem;
-            letter-spacing: 2px;
-            text-align: center;
-            margin-bottom: 20px;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .password-input::placeholder {
-            color: rgba(0, 255, 0, 0.5);
-        }
-        
-        .password-btn {
-            width: 100%;
             padding: 12px;
-            background: rgba(0, 30, 0, 0.9);
-            border: 1px solid #0f0;
-            border-radius: 5px;
-            color: #0f0;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            text-align: center;
+            margin-bottom: 15px;
             letter-spacing: 1px;
+            color: #00ff88;
+            box-sizing: border-box;
         }
         
-        .password-btn:active {
-            background: rgba(0, 40, 0, 0.9);
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+        .password-input:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
         }
         
         .password-error {
-            color: #f00;
-            text-align: center;
-            margin-top: 10px;
-            font-size: 0.9rem;
-            text-shadow: 0 0 5px #f00;
-            display: none;
+            color: #ff5555;
+            margin: 10px 0;
+            min-height: 18px;
+            font-size: 11px;
+            font-weight: bold;
         }
         
-        .close-panel-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 30px;
-            height: 30px;
-            background: rgba(255, 0, 0, 0.2);
-            border: 1px solid #f00;
-            border-radius: 50%;
-            color: #f00;
+        .password-submit {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #00cc6a, #00ff88);
+            color: #0a0e17;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
+            transition: all 0.2s;
         }
         
-        .close-panel-btn:hover, .close-panel-btn:active {
-            background: rgba(255, 0, 0, 0.3);
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        .password-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
         }
         
-        .glitch-text {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .glitch-text::before,
-        .glitch-text::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .glitch-text::before {
-            left: 1px;
-            text-shadow: -1px 0 #ff00ff;
-            animation: glitch-1 5s infinite linear alternate-reverse;
-        }
-        
-        .glitch-text::after {
-            left: -1px;
-            text-shadow: 1px 0 #00ffff;
-            animation: glitch-2 7s infinite linear alternate-reverse;
-        }
-        
-        @keyframes glitch-1 {
-            0%, 40%, 44%, 58%, 61%, 65%, 69%, 73%, 77%, 100% {
-                clip-path: inset(33% 0 30% 0);
-            }
-            41% {
-                clip-path: inset(70% 0 5% 0);
-            }
-            42% {
-                clip-path: inset(80% 0 1% 0);
-            }
-            60% {
-                clip-path: inset(45% 0 50% 0);
-            }
-            62% {
-                clip-path: inset(31% 0 28% 0);
-            }
-        }
-        
-        @keyframes glitch-2 {
-            0%, 39%, 41%, 45%, 55%, 57%, 70%, 100% {
-                clip-path: inset(64% 0 18% 0);
-            }
-            40% {
-                clip-path: inset(25% 0 53% 0);
-            }
-            56% {
-                clip-path: inset(30% 0 28% 0);
-            }
-            58% {
-                clip-path: inset(92% 0 3% 0);
-            }
-        }
-        
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.2rem;
-            color: #0f0;
-            z-index: 10;
-            text-shadow: 0 0 8px #0f0;
+        .system-info {
+            padding: 8px;
             text-align: center;
-            width: 100%;
-            padding: 0 20px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
         }
         
-        /* AMAN PREDICTION STYLES */
-        #prediction-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            width: 100%;
-            padding: 15px;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
         
-        .prediction-card {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            padding: 25px 20px;
-            text-align: center;
-            border-radius: 20px;
-            background: rgba(30,0,0,0.4);
-            box-shadow: 0 0 25px rgba(255,0,0,0.25);
-            backdrop-filter: blur(10px);
-            overflow: hidden;
-            border: 1px solid rgba(255, 0, 0, 0.3);
-        }
-        
-        .prediction-card::before {
-            content: "";
-            position: absolute;
-            inset: -2px;
-            border-radius: 20px;
-            background: conic-gradient(from 0deg, #ff3333, #ffd700, #ff3333);
-            animation: spin 5s linear infinite;
-            z-index: -1;
-            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            padding: 2px;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .prediction-title {
-            margin: 0 0 20px;
-            font-size: 1.2rem;
-            letter-spacing: 0.5px;
-            color: #ffd700;
-            text-shadow: 0 0 8px #ffae00;
-            font-family: 'Poppins', sans-serif;
-            line-height: 1.3;
-        }
-        
-        .prediction-box {
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        
-        .prediction-label {
-            font-size: 0.9rem;
-            color: #fcd9b6;
-            margin-bottom: 5px;
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        .prediction-timer {
-            font-family: 'Orbitron', monospace;
-            font-size: 2rem;
-            letter-spacing: 2px;
-            text-shadow: 0 0 12px #ff3333;
-            text-align: center;
-            color: #fff5e6;
-        }
-        
-        .prediction-result {
-            font-size: 1.8rem;
-            font-weight: 700;
-            padding: 10px 15px;
-            border-radius: 8px;
-            display: inline-block;
-            min-width: 150px;
-            transition: all 0.4s ease;
-            opacity: 1;
-            margin-top: 8px;
-        }
-        
-        .prediction-small {
-            color: #ffd700;
-            box-shadow: 0 0 15px 2px rgba(255,215,0,0.5);
-            background: rgba(255,215,0,0.08);
-        }
-        
-        .prediction-big {
-            color: #ff3333;
-            box-shadow: 0 0 15px 2px rgba(255,51,51,0.5);
-            background: rgba(255,51,51,0.08);
-        }
-        
-        .prediction-meta {
-            font-size: 0.85rem;
-            color: #fcd9b6;
-            margin-top: 15px;
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        .fade {
-            animation: fade 1.2s ease;
-        }
-        
-        @keyframes fade {
-            0% { opacity: 0; transform: scale(0.9); }
-            50% { opacity: 1; transform: scale(1.05); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 10px 2px currentColor; }
-            50% { box-shadow: 0 0 20px 4px currentColor; }
-            100% { box-shadow: 0 0 10px 2px currentColor; }
-        }
-        
-        /* Spark particles canvas */
-        #sparks {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-        }
-        
-        @media (min-width: 768px) {
-            .content-wrapper {
-                flex-direction: row;
-            }
-            
-            .mobile-tabs {
-                display: none;
-            }
-            
-            .mobile-data-stream {
-                display: block;
-                width: 300px;
-                margin-top: 0;
-                align-self: flex-start;
-                max-height: 200px;
-            }
-            
-            .floating-controls-btn {
-                width: 70px;
-                height: 70px;
-                font-size: 1.8rem;
-            }
-            
-            .floating-controls-panel {
-                max-width: 450px;
-            }
-        }
-        
-        @media (max-width: 767px) {
-            .terminal-header h1 {
-                font-size: 1.1rem;
-            }
-            
-            .percentage-value {
-                font-size: 2.5rem;
-            }
-            
-            .prediction-timer {
-                font-size: 1.8rem;
-            }
-            
-            .prediction-result {
-                font-size: 1.5rem;
-                min-width: 130px;
-            }
-            
-            .floating-controls-btn {
-                bottom: 15px;
-                right: 15px;
-                width: 55px;
-                height: 55px;
-                font-size: 1.3rem;
-            }
-            
-            .floating-controls-panel {
-                width: 95%;
-                padding: 15px;
-            }
-        }
+        .status-low { color: #ff5555; }
+        .status-medium { color: #ffaa00; }
+        .status-high { color: #00ff88; }
+        .status-very-high { color: #00ff88; }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Password Prompt -->
-    <div class="password-prompt" id="password-prompt">
-        <div class="password-box">
-            <div class="password-title">SYSTEM CONTROLS LOCKED</div>
-            <input type="password" class="password-input" id="password-input" placeholder="ENTER PASSWORD" maxlength="12">
-            <button class="password-btn" id="password-submit">UNLOCK</button>
-            <div class="password-error" id="password-error">INCORRECT PASSWORD!</div>
+    <div class="webview-container">
+        <iframe src="https://kyawswarwin.6959167.com/register.html"></iframe>
+        
+        <div class="control-panel" id="controlPanel">
+            🔐 SECURE PANEL
         </div>
-    </div>
-
-    <!-- Floating Controls Button -->
-    <div class="floating-controls-btn" id="floating-btn">
-        ⚙️
-    </div>
-    
-    <!-- Floating Controls Panel with WIN PROBABILITY -->
-    <div class="floating-controls-panel" id="floating-panel">
-        <div class="close-panel-btn" id="close-panel">×</div>
         
-        <h3>SLOP HACK SYSTEM CONTROLS</h3>
-        
-        <!-- WIN PROBABILITY Indicator -->
-        <div class="floating-indicator" id="floating-indicator">
-            <div class="indicator-header">
-                <div class="indicator-title">WIN RTP PROBABILITY</div>
-                <div class="indicator-status">ONLINE</div>
+        <div class="floating-box" id="floatingBox">
+            <div class="box-header">
+                <button class="minimize-btn" id="minimizeBtn">_</button>
+                <div class="box-title">SYSTEM MONITOR</div>
+                <div class="box-subtitle">ACTIVE</div>
             </div>
             
-            <div class="percentage-display">
-                <div class="percentage-value" id="percentage">50</div>
-                <div class="percentage-label">CURRENT CHANCE</div>
-            </div>
-            
-            <div class="progress-container">
-                <div class="progress-label">
-                    <span>MIN</span>
-                    <span>MAX</span>
+            <div class="percentage-container">
+                <div class="percentage-value" id="percentageValue">65%</div>
+                
+                <div class="percentage-bar">
+                    <div class="percentage-fill" id="percentageFill"></div>
                 </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progress-fill"></div>
+                
+                <div class="percentage-markers">
+                    <span>30%</span>
+                    <span>65%</span>
+                    <span>100%</span>
+                </div>
+                
+                <div class="percentage-status">
+                    <span class="status-label">STATUS</span>
+                    <span id="statusText" class="status-medium">OPTIMAL</span>
+                </div>
+                
+                <div class="online-status">
+                    <div class="online-dot"></div>
+                    <div class="online-text">ACTIVATE ONLINE</div>
                 </div>
             </div>
             
-            <div class="chance-description" id="chance-description">
-                ANALYZING GAME DATA...
-            </div>
-            
-            <div class="floating-controls-buttons">
-                <button class="floating-btn" id="start-btn">START</button>
-                <button class="floating-btn" id="pause-btn">PAUSE</button>
-                <button class="floating-btn" id="reset-btn">RESET</button>
+            <div class="system-info">
+                KKG SLOP HACK 100% WIN
             </div>
         </div>
         
-        <!-- System Controls -->
-        <div class="floating-controls">
-            <div class="control-toggle">
-                <span>Data Stream</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="toggle-stream" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-            <div class="control-toggle">
-                <span>Prediction System</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="toggle-prediction">
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-            <div style="font-size: 0.8rem; color: #8f8; margin-top: 15px; text-align: center; opacity: 0.7;">
-                Password: KKGHACKVIP
+        <div class="password-modal" id="passwordModal">
+            <div class="password-box">
+                <div class="password-icon">🔐</div>
+                <div class="password-title">SECURE ACCESS</div>
+                <div class="password-subtitle">
+                    Enter password to access system monitor
+                </div>
+                
+                <input type="password" 
+                       class="password-input" 
+                       id="passwordInput" 
+                       placeholder="PASSWORD"
+                       maxlength="20">
+                
+                <div class="password-error" id="passwordError"></div>
+                
+                <button class="password-submit" id="passwordSubmit">
+                    VERIFY
+                </button>
             </div>
         </div>
     </div>
-
-    <div class="container">
-        <div class="terminal-header">
-            <h1 class="glitch-text" data-text="KKG HACK 100% WIN SYSTEM">KKG HACK 100% WIN SYSTEM</h1>
-            <p>> WIN PROBABILITY 100% HACK SYSTEM<span class="blink">_</span></p>
-        </div>
-        
-        <div class="content-wrapper">
-            <!-- Mobile Tabs -->
-            <div class="mobile-tabs">
-                <button class="mobile-tab active" data-tab="webview">WEB VIEW</button>
-                <button class="mobile-tab" data-tab="stream">DATA STREAM</button>
-            </div>
-            
-            <!-- Web View Container -->
-            <div class="webview-container">
-                <div class="loading" id="loading">LOADING WEB VIEW...</div>
-                <iframe id="webview" src="https://kyawswarwin.6959167.com/register.html" title="Web View"></iframe>
-                <div id="prediction-container">
-                    <!-- AMAN PREDICTION WILL BE LOADED HERE -->
-                    <div id="prediction-content"></div>
-                </div>
-            </div>
-            
-            <!-- Mobile Data Stream -->
-            <div class="mobile-data-stream active" id="mobile-data-stream">
-                <div class="stream-content">
-                    <div class="stream-line">
-                        > INITIALIZING DUAL SYSTEM...<br>
-                        > LOADING WEB VIEW...<br>
-                        > CONNECTING TO SERVER...<br>
-                        > LOADING GAME DATA...<br>
-                        > CALCULATING PROBABILITIES...<br>
-                        > SYSTEM READY<br>
-                        > MONITORING GAME PATTERNS...<br>
-                        > ANALYZING HISTORICAL DATA...<br>
-                        > UPDATING CHANCE ALGORITHM...<br>
-                        > GENERATING PREDICTIONS...<br>
-                        > OPTIMIZING ACCURACY...<br>
-                        > SYSTEM STABLE<br>
-                        > CONTINUOUS MONITORING ACTIVE<br>
-                        > REAL-TIME UPDATES ENABLED<br>
-                        > DATA STREAM ACTIVE<br>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Audio for beep -->
-    <audio id="beep" preload="auto" style="display: none;">
-        <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
-    </audio>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Elements
-            const percentageElement = document.getElementById('percentage');
-            const progressFill = document.getElementById('progress-fill');
-            const chanceDescription = document.getElementById('chance-description');
-            const startBtn = document.getElementById('start-btn');
-            const pauseBtn = document.getElementById('pause-btn');
-            const resetBtn = document.getElementById('reset-btn');
-            const webview = document.getElementById('webview');
-            const loading = document.getElementById('loading');
-            const predictionContainer = document.getElementById('prediction-container');
-            const predictionContent = document.getElementById('prediction-content');
-            const mobileDataStream = document.getElementById('mobile-data-stream');
-            
-            // Mobile tabs
-            const mobileTabs = document.querySelectorAll('.mobile-tab');
-            const webviewTab = document.querySelector('.mobile-tab[data-tab="webview"]');
-            const streamTab = document.querySelector('.mobile-tab[data-tab="stream"]');
-            
-            // Floating controls
-            const floatingBtn = document.getElementById('floating-btn');
-            const floatingPanel = document.getElementById('floating-panel');
-            const closePanelBtn = document.getElementById('close-panel');
-            const passwordPrompt = document.getElementById('password-prompt');
-            const passwordInput = document.getElementById('password-input');
-            const passwordSubmit = document.getElementById('password-submit');
-            const passwordError = document.getElementById('password-error');
-            
-            // Toggle controls
-            const toggleStream = document.getElementById('toggle-stream');
-            const togglePrediction = document.getElementById('toggle-prediction');
-            
-            // Variables
-            let currentPercentage = 50;
-            let isRunning = true;
-            let updateInterval;
-            let predictionInterval;
-            const updateSpeed = 2000;
-            
-            // Password and access control
-            const CORRECT_PASSWORD = "KKGHACKVIP";
-            let controlsUnlocked = false;
-            
-            // Prediction system variables
-            let predictionActive = false;
-            let predictionSystemInitialized = false;
-            
-            // Chance descriptions
-            const descriptions = [
-                "CRITICAL FAILURE PROBABILITY",
-                "EXTREMELY LOW WIN CHANCE",
-                "LOW PROBABILITY OF SUCCESS",
-                "BELOW AVERAGE CHANCE",
-                "MODERATE WIN POTENTIAL",
-                "FAVORABLE CONDITIONS",
-                "HIGH PROBABILITY OF SUCCESS",
-                "EXTREMELY FAVORABLE OUTCOME",
-                "NEAR CERTAINTY OF VICTORY",
-                "MAXIMUM WIN PROBABILITY"
-            ];
-            
-            // Initialize
-            updateDisplay();
-            startUpdating();
-            setupMobileTabs();
-            setupFloatingControls();
-            
-            // Webview loaded handler
-            webview.addEventListener('load', function() {
-                loading.style.display = 'none';
-            });
-            
-            // Mobile tabs functionality
-            function setupMobileTabs() {
-                mobileTabs.forEach(tab => {
-                    tab.addEventListener('click', function() {
-                        // Remove active class from all tabs
-                        mobileTabs.forEach(t => t.classList.remove('active'));
-                        
-                        // Add active class to clicked tab
-                        this.classList.add('active');
-                        
-                        const tabType = this.dataset.tab;
-                        
-                        // Show/hide corresponding content
-                        if (tabType === 'webview') {
-                            webview.style.display = 'block';
-                            mobileDataStream.classList.remove('active');
-                            if (predictionActive) {
-                                predictionContainer.style.display = 'block';
-                                webview.style.display = 'none';
-                            }
-                        } else if (tabType === 'stream') {
-                            webview.style.display = 'none';
-                            predictionContainer.style.display = 'none';
-                            mobileDataStream.classList.add('active');
-                        }
-                    });
-                });
-            }
-            
-            // Floating controls functionality with password protection
-            function setupFloatingControls() {
-                // Show password prompt when floating button is clicked
-                floatingBtn.addEventListener('click', function() {
-                    if (!controlsUnlocked) {
-                        passwordPrompt.classList.add('active');
-                        passwordInput.focus();
-                    } else {
-                        floatingPanel.classList.add('active');
-                    }
-                });
-                
-                // Close panel button
-                closePanelBtn.addEventListener('click', function() {
-                    floatingPanel.classList.remove('active');
-                });
-                
-                // Password submission
-                passwordSubmit.addEventListener('click', function() {
-                    checkPassword();
-                });
-                
-                // Press Enter to submit password
-                passwordInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        checkPassword();
-                    }
-                });
-                
-                // Close floating panel when clicking outside
-                document.addEventListener('click', function(e) {
-                    if (!floatingPanel.contains(e.target) && !floatingBtn.contains(e.target) && floatingPanel.classList.contains('active')) {
-                        floatingPanel.classList.remove('active');
-                    }
-                });
-            }
-            
-            function checkPassword() {
-                const enteredPassword = passwordInput.value.trim().toUpperCase();
-                
-                if (enteredPassword === CORRECT_PASSWORD) {
-                    controlsUnlocked = true;
-                    passwordPrompt.classList.remove('active');
-                    passwordInput.value = '';
-                    passwordError.style.display = 'none';
-                    floatingPanel.classList.add('active');
-                    floatingBtn.innerHTML = '🔓';
-                } else {
-                    passwordError.style.display = 'block';
-                    passwordInput.value = '';
-                    passwordInput.focus();
-                    
-                    // Shake animation for error
-                    passwordError.style.animation = 'none';
-                    setTimeout(() => {
-                        passwordError.style.animation = 'fade 0.5s ease';
-                    }, 10);
-                }
-            }
-            
-            // Toggle controls event listeners (only work if unlocked)
-            toggleStream.addEventListener('change', function() {
-                if (!controlsUnlocked) {
-                    this.checked = !this.checked;
-                    showLockedMessage();
-                    return;
-                }
-                
-                mobileDataStream.style.display = this.checked ? 'block' : 'none';
-                if (streamTab.classList.contains('active') && !this.checked) {
-                    webviewTab.click();
-                }
-            });
-            
-            togglePrediction.addEventListener('change', function() {
-                if (!controlsUnlocked) {
-                    this.checked = !this.checked;
-                    showLockedMessage();
-                    return;
-                }
-                
-                predictionActive = this.checked;
-                if (predictionActive) {
-                    // Show prediction, hide webview
-                    webview.style.display = 'none';
-                    predictionContainer.style.display = 'block';
-                    
-                    // Initialize prediction system if not already done
-                    if (!predictionSystemInitialized) {
-                        initializePredictionSystem();
-                        predictionSystemInitialized = true;
-                    }
-                    
-                    // Start prediction timer
-                    startPredictionTimer();
-                } else {
-                    // Show webview, hide prediction
-                    if (webviewTab.classList.contains('active')) {
-                        webview.style.display = 'block';
-                    }
-                    predictionContainer.style.display = 'none';
-                    
-                    // Stop prediction timer
-                    stopPredictionTimer();
-                }
-            });
-            
-            function showLockedMessage() {
-                if (!controlsUnlocked) {
-                    passwordPrompt.classList.add('active');
-                    passwordInput.focus();
-                }
-            }
-            
-            // Start button
-            startBtn.addEventListener('click', function() {
-                if (!isRunning) {
-                    isRunning = true;
-                    startUpdating();
-                    startBtn.textContent = "RUNNING";
-                    pauseBtn.textContent = "PAUSE";
-                    chanceDescription.textContent = "SYSTEM RESUMED... UPDATING";
-                }
-            });
-            
-            // Pause button
-            pauseBtn.addEventListener('click', function() {
-                if (isRunning) {
-                    isRunning = false;
-                    clearInterval(updateInterval);
-                    startBtn.textContent = "RESUME";
-                    pauseBtn.textContent = "PAUSED";
-                    chanceDescription.textContent = "SYSTEM PAUSED... AWAITING INPUT";
-                }
-            });
-            
-            // Reset button
-            resetBtn.addEventListener('click', function() {
-                currentPercentage = 50;
-                updateDisplay();
-                chanceDescription.textContent = "SYSTEM RESET TO DEFAULT VALUES";
-            });
-            
-            // Function to start updating the percentage
-            function startUpdating() {
-                if (isRunning) {
-                    updateInterval = setInterval(updatePercentage, updateSpeed);
-                }
-            }
-            
-            // Function to update the percentage
-            function updatePercentage() {
-                // Generate a random change between -8 and +8 (slower changes)
-                let change = Math.floor(Math.random() * 17) - 8;
-                
-                // Apply the change to current percentage
-                currentPercentage += change;
-                
-                // Ensure percentage stays within 1-100 range
-                if (currentPercentage < 1) currentPercentage = 1;
-                if (currentPercentage > 100) currentPercentage = 100;
-                
-                // Update display
-                updateDisplay();
-                
-                // Occasionally add glitch effect
-                if (Math.random() > 0.7) {
-                    addGlitchEffect();
-                }
-            }
-            
-            // Function to update all display elements
-            function updateDisplay() {
-                // Update percentage text
-                percentageElement.textContent = currentPercentage;
-                
-                // Update progress bar
-                progressFill.style.width = `${currentPercentage}%`;
-                
-                // Update description based on percentage
-                let descriptionIndex = Math.floor(currentPercentage / 10);
-                if (descriptionIndex > 9) descriptionIndex = 9;
-                if (descriptionIndex < 0) descriptionIndex = 0;
-                
-                chanceDescription.textContent = descriptions[descriptionIndex];
-                
-                // Change color intensity based on percentage
-                let intensity = currentPercentage / 100;
-                let greenValue = Math.floor(15 + (240 * intensity));
-                let color = `rgb(0, ${greenValue}, 0)`;
-                
-                percentageElement.style.color = color;
-                percentageElement.style.textShadow = `0 0 12px ${color}`;
-            }
-            
-            // Function to add glitch effect
-            function addGlitchEffect() {
-                percentageElement.classList.add('glitch-text');
-                setTimeout(() => {
-                    percentageElement.classList.remove('glitch-text');
-                }, 300);
-            }
-            
-            // Initialize AMAN PREDICTION system
-            function initializePredictionSystem() {
-                // Create prediction card HTML
-                predictionContent.innerHTML = `
-                    <div class="prediction-card">
-                        <h1 class="prediction-title">WINGO HACK 99% WIN</h1>
-
-                        <div class="prediction-box">
-                            <div class="prediction-label">Countdown to next minute</div>
-                            <div id="timer" class="prediction-timer">00 : 00</div>
-                        </div>
-
-                        <div class="prediction-box">
-                            <div class="prediction-label">Prediction</div>
-                            <div id="main" class="prediction-result prediction-small">SMALL 0</div>
-                        </div>
-
-                        <div class="prediction-meta">Timezone used: <strong>UTC</strong></div>
-                    </div>
-                `;
-                
-                // Create canvas for sparks
-                const canvas = document.createElement('canvas');
-                canvas.id = 'sparks';
-                predictionContent.appendChild(canvas);
-                
-                // Initialize spark particles
-                initSparkParticles();
-            }
-            
-            // Start prediction timer
-            function startPredictionTimer() {
-                const timerEl = document.getElementById('timer');
-                const mainEl = document.getElementById('main');
-                const beep = document.getElementById('beep');
-                
-                // Helpers
-                function pad(n, s=2) { return String(n).padStart(s, '0'); }
-                
-                function makePrediction() {
-                    const num = Math.floor(Math.random() * 10);
-                    return { num, size: (num <= 4 ? "SMALL" : "BIG") };
-                }
-                
-                // Update prediction
-                function updatePrediction() {
-                    const p = makePrediction();
-                    mainEl.textContent = `${p.size} ${p.num}`;
-                    mainEl.className = "prediction-result fade " + (p.size === "SMALL" ? "prediction-small" : "prediction-big");
-                    mainEl.style.animation = "pulseGlow 2s ease";
-                    setTimeout(() => mainEl.style.animation = '', 2000);
-                    
-                    try {
-                        beep.currentTime = 0;
-                        beep.play();
-                    } catch(e) {}
-                    
-                    // Update chance indicator based on prediction
-                    if (p.size === "SMALL") {
-                        currentPercentage = 40 + Math.floor(Math.random() * 20);
-                    } else {
-                        currentPercentage = 60 + Math.floor(Math.random() * 20);
-                    }
-                    updateDisplay();
-                }
-                
-                // Timer tick
-                function tick() {
-                    const now = new Date();
-                    const sec = now.getUTCSeconds();
-                    const rem = 59 - sec;
-                    timerEl.textContent = `   ${pad(0)}  :  ${pad(rem)}`.replace(/(?<=\d)(?=\d)/g, ' ');
-                    if (sec === 0) updatePrediction();
-                }
-                
-                // Initialize
-                updatePrediction();
-                predictionInterval = setInterval(tick, 1000);
-            }
-            
-            // Stop prediction timer
-            function stopPredictionTimer() {
-                if (predictionInterval) {
-                    clearInterval(predictionInterval);
-                }
-            }
-            
-            // Initialize spark particles for prediction system
-            function initSparkParticles() {
-                const canvas = document.getElementById('sparks');
-                if (!canvas) return;
-                
-                const ctx = canvas.getContext('2d');
-                let w, h, particles = [];
-                
-                function resize() {
-                    w = predictionContent.offsetWidth;
-                    h = predictionContent.offsetHeight;
-                    canvas.width = w;
-                    canvas.height = h;
-                }
-                
-                window.addEventListener('resize', resize);
-                resize();
-                
-                function createParticle() {
-                    return {
-                        x: Math.random() * w,
-                        y: Math.random() * h,
-                        r: Math.random() * 2 + 0.5,
-                        s: Math.random() * 0.7 + 0.3,
-                        o: Math.random() * 0.5 + 0.5,
-                        c: Math.random() < 0.5 ? '#ff3333' : '#ffd700'
-                    };
-                }
-                
-                for(let i = 0; i < 60; i++) particles.push(createParticle());
-                
-                function animate() {
-                    ctx.clearRect(0, 0, w, h);
-                    particles.forEach(p => {
-                        ctx.beginPath();
-                        ctx.fillStyle = p.c;
-                        ctx.globalAlpha = p.o;
-                        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                        ctx.fill();
-                        p.y += p.s;
-                        if(p.y > h) {
-                            p.y = 0;
-                            p.x = Math.random() * w;
-                        }
-                    });
-                    requestAnimationFrame(animate);
-                }
-                animate();
-            }
-            
-            // Add data stream updates
-            const streamContent = document.querySelector('.stream-line');
-            const streamLines = [
-                "> UPDATING PROBABILITY MATRIX...",
-                "> CALCULATING NEW CHANCE VALUE...",
-                "> ANALYZING GAME TRENDS...",
-                "> PROCESSING REAL-TIME DATA...",
-                "> OPTIMIZING PREDICTION ALGORITHM...",
-                "> VERIFYING DATA INTEGRITY...",
-                "> GENERATING NEW PROBABILITY...",
-                "> SYSTEM PERFORMANCE NOMINAL..."
-            ];
-            
-            // Occasionally add new lines to the data stream
-            setInterval(() => {
-                if (isRunning) {
-                    const randomLine = streamLines[Math.floor(Math.random() * streamLines.length)];
-                    const newLine = document.createElement('div');
-                    newLine.textContent = randomLine;
-                    streamContent.appendChild(newLine);
-                    
-                    // Keep only last 12 lines
-                    if (streamContent.children.length > 12) {
-                        streamContent.removeChild(streamContent.firstChild);
-                    }
-                }
-            }, 3000);
-            
-            // Initial glitch effect
-            setTimeout(() => {
-                addGlitchEffect();
-            }, 1000);
-            
-            // Auto-hide floating panel after 10 seconds
-            setTimeout(() => {
-                if (floatingPanel.classList.contains('active')) {
-                    floatingPanel.classList.remove('active');
-                }
-            }, 10000);
+        // Configuration
+        const CORRECT_PASSWORD = "KKGHACK2026";
+        const ANIMATION_SPEED = 180000; // 180 seconds
+        const MIN_PERCENTAGE = 30;
+        const MAX_PERCENTAGE = 100;
+        
+        // DOM elements
+        const controlPanel = document.getElementById('controlPanel');
+        const floatingBox = document.getElementById('floatingBox');
+        const minimizeBtn = document.getElementById('minimizeBtn');
+        const percentageValue = document.getElementById('percentageValue');
+        const percentageFill = document.getElementById('percentageFill');
+        const statusText = document.getElementById('statusText');
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordSubmit = document.getElementById('passwordSubmit');
+        const passwordError = document.getElementById('passwordError');
+        
+        // State variables
+        let animationInterval = null;
+        let currentPercentage = 65;
+        let isAnimating = false;
+        let isAuthenticated = false;
+        let previousDirection = 0;
+        let isMinimized = false;
+        
+        // Initialize display
+        updatePercentageDisplay(currentPercentage);
+        
+        // Event Listeners
+        controlPanel.addEventListener('click', handleControlPanelClick);
+        minimizeBtn.addEventListener('click', toggleMinimize);
+        passwordSubmit.addEventListener('click', verifyPassword);
+        passwordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') verifyPassword();
         });
-    </script>
-</body>
-</html>
+        
+        function handleControlPanelClick() {
+            if (!isAuthenticated) {
+                showPasswordModal();
+            } else {
+                toggleFloatingBox();
+            }
+        }
+        
+        function toggleMinimize(e) {
+            e.stopPropagation();
+            isMinimized = !isMinimized;
+            if (isMinimized) {
+                floatingBox.classList.add('minimized');
+                // Change minimize button to show maximize icon
+                minimizeBtn.textContent = '+';
+                minimizeBtn.title = "Maximize";
+            } else {
+                floatingBox.classList.remove('minimized');
+                // Change back to minimize icon
+                minimizeBtn.textContent = '_';
+                minimizeBtn.title = "Minimize";
+            }
+        }
+        
+        function toggleFloatingBox() {
+            if (!floatingBox.classList.contains('show')) {
+                // Show the box
+                floatingBox.classList.add('show');
+                floatingBox.classList.remove('minimized');
+                isMinimized = false;
+                minimizeBtn.textContent = '_';
+                minimizeBtn.title = "Minimize";
+                
+                if (!isAnimating) {
+                    startAnimation();
+                }
+            } else if (isMinimized) {
+                // If minimized, maximize it
+                toggleMinimize({stopPropagation: function(){}});
+            } else {
+                // If shown and not minimized, minimize it
+                toggleMinimize({stopPropagation: function(){}});
+            }
+        }
+        
+        function showPasswordModal() {
+            passwordModal.classList.add('show');
+            passwordInput.focus();
+            passwordInput.value = '';
+            passwordError.textContent = '';
+        }
+        
+        function hidePasswordModal() {
+            passwordModal.classList.remove('show');
+        }
+        
+        function verifyPassword() {
+            const enteredPassword = passwordInput.value.trim();
+            
+            if (enteredPassword === CORRECT_PASSWORD) {
+                isAuthenticated = true;
+                hidePasswordModal();
+                activateSystem();
+            } else {
+                passwordError.textContent = '⚠️ ACCESS DENIED';
+                passwordInput.value = '';
+                passwordInput.focus();
+                
+                // Shake animation
+                passwordInput.style.animation = 'none';
+                setTimeout(() => {
+                    passwordInput.style.animation = 'shake 0.5s';
+                }, 10);
+            }
+        }
+        
+        function activateSystem() {
+            // Update control panel
+            controlPanel.innerHTML = '✅ ONLINE';
+            controlPanel.style.background = 'rgba(0, 204, 106, 0.9)';
+            controlPanel.style.boxShadow = '0 4px 15px rgba(0, 255, 136, 0.3)';
+            
+            // Update floating box header
+            const boxTitle = document.querySelector('.box-title');
+            const boxSubtitle = document.querySelector('.box-subtitle');
+            boxTitle.textContent = '✅ ACTIVE';
+            boxTitle.style.color = '#00ff88';
+            boxSubtitle.textContent = 'SYSTEM ONLINE';
+            boxSubtitle.style.color = 'rgba(0, 255, 136, 0.8)';
+            
+            // Show floating box and start animation
+            floatingBox.classList.add('show');
+            startAnimation();
+        }
+        
+        function startAnimation() {
+            if (isAnimating) return;
+            
+            isAnimating = true;
+            
+            // Initial update
+            updatePercentage();
+            
+            // Set interval for 180 seconds
+            animationInterval = setInterval(updatePercentage, ANIMATION_SPEED);
+        }
+        
+        function stopAnimation() {
+            isAnimating = false;
+            if (animationInterval) {
+                clearInterval(animationInterval);
+                animationInterval = null;
+            }
+        }
+        
+        function updatePercentage() {
+            const newPercentage = generateNextPercentage();
+            animatePercentageChange(currentPercentage, newPercentage);
+            currentPercentage = newPercentage;
+        }
+        
+        function generateNextPercentage() {
+            let change;
+            
+            if (Math.random() < 0.6 && previousDirection !== 0) {
+                change = previousDirection * (8 + Math.random() * 15);
+            } else {
+                change = (Math.random() - 0.5) * 25;
+                previousDirection = change > 0 ? 1 : -1;
+            }
+            
+            let newValue = currentPercentage + change;
+            
+            // Boundary check
+            if (newValue < MIN_PERCENTAGE) {
+                newValue = MIN_PERCENTAGE;
+                previousDirection = 1;
+            } else if (newValue > MAX_PERCENTAGE) {
+                newValue = MAX_PERCENTAGE;
+                previousDirection = -1;
+            }
+            
+            // Occasional significant change
+            if (Math.random() < 0.15) {
+                newValue = MIN_PERCENTAGE + Math.random() * (MAX_PERCENTAGE - MIN_PERCENTAGE);
+            }
+            
+            return Math.round(newValue);
+        }
+        
+        function animatePercentageChange(oldPercent, newPercent) {
+            const difference = Math.abs(newPercent - oldPercent);
+            const duration = Math.min(2000, difference * 20);
+            
+            updateStatus(newPercent);
+            animateValue(oldPercent, newPercent, duration);
+        }
+        
+        function updateStatus(percent) {
+            let statusClass, statusMessage;
+            
+            if (percent < 40) {
+                statusClass = 'status-low';
+                statusMessage = 'LOW';
+            } else if (percent < 60) {
+                statusClass = 'status-medium';
+                statusMessage = 'OPTIMAL';
+            } else if (percent < 85) {
+                statusClass = 'status-high';
+                statusMessage = 'HIGH';
+            } else {
+                statusClass = 'status-very-high';
+           

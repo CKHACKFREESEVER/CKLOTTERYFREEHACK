@@ -384,7 +384,7 @@
             </div>
             
             <div class="system-info">
-                KKG SLOP HACK 100% WIN
+                KKG HACK SLOP 100% WIN
             </div>
         </div>
         
@@ -621,4 +621,72 @@
                 statusMessage = 'HIGH';
             } else {
                 statusClass = 'status-very-high';
-           
+                statusMessage = 'PEAK';
+            }
+            
+            statusText.textContent = statusMessage;
+            statusText.className = statusClass;
+        }
+        
+        function animateValue(startValue, endValue, duration) {
+            let startTime = null;
+            
+            function step(currentTime) {
+                if (!startTime) startTime = currentTime;
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const easedProgress = 1 - Math.pow(1 - progress, 3);
+                const currentValue = startValue + (endValue - startValue) * easedProgress;
+                updatePercentageDisplay(Math.round(currentValue));
+                
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                }
+            }
+            
+            requestAnimationFrame(step);
+        }
+        
+        function updatePercentageDisplay(percent) {
+            percentageValue.textContent = percent + '%';
+            percentageFill.style.width = percent + '%';
+            
+            // Update colors
+            if (percent < 40) {
+                percentageValue.style.color = '#ff5555';
+                percentageFill.style.background = 'linear-gradient(90deg, #cc4444, #ff5555)';
+            } else if (percent < 60) {
+                percentageValue.style.color = '#ffaa00';
+                percentageFill.style.background = 'linear-gradient(90deg, #cc8800, #ffaa00)';
+            } else {
+                percentageValue.style.color = '#00ff88';
+                percentageFill.style.background = 'linear-gradient(90deg, #00cc6a, #00ff88)';
+            }
+        }
+        
+        // Add shake animation for password error
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Click outside to close (if not minimized)
+        document.addEventListener('click', function(event) {
+            if (!isAuthenticated) return;
+            
+            if (!floatingBox.contains(event.target) && 
+                !controlPanel.contains(event.target) && 
+                floatingBox.classList.contains('show') &&
+                !isMinimized) {
+                toggleMinimize({stopPropagation: function(){}});
+            }
+        });
+    </script>
+</body>
+</html>
